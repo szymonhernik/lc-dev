@@ -143,6 +143,8 @@ export async function signInWithPassword(formData: FormData) {
     password
   });
 
+  // console.log('data', data);
+
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',
@@ -249,7 +251,7 @@ export async function updatePassword(formData: FormData) {
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
-      '/',
+      '/account',
       'Success!',
       'Your password has been updated.'
     );
@@ -262,6 +264,80 @@ export async function updatePassword(formData: FormData) {
   }
 
   return redirectPath;
+}
+
+// export async function updatePasswordInAccount(formData: FormData) {
+//   const password = String(formData.get('password')).trim();
+//   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+//   let redirectPath: string;
+
+//   // Check that the password and confirmation match
+
+//   if (password !== passwordConfirm) {
+//     console.log('password:', password);
+//     console.log('passwordConfirm:', passwordConfirm);
+
+//     redirectPath = getErrorRedirect(
+//       '/account',
+//       'Your password could not be updated.',
+//       'Passwords do not match.'
+//     );
+//     return redirectPath;
+//   }
+
+//   const supabase = createClient();
+//   const { error, data } = await supabase.auth.updateUser({
+//     password
+//   });
+
+//   if (error) {
+//     redirectPath = getErrorRedirect(
+//       '/account',
+//       'Your password could not be updated.',
+//       error.message
+//     );
+//   } else if (data.user) {
+//     redirectPath = getStatusRedirect(
+//       '/account',
+//       'Success!',
+//       'Your password has been updated.'
+//     );
+//   } else {
+//     redirectPath = getErrorRedirect(
+//       '/account',
+//       'Hmm... Something went wrong.',
+//       'Your password could not be updated.'
+//     );
+//   }
+
+//   return redirectPath;
+// }
+export async function updatePasswordInAccount(
+  prevState: any,
+  formData: FormData
+) {
+  const password = String(formData.get('password')).trim();
+  const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+
+  if (password !== passwordConfirm) {
+    // For Server Actions, consider returning an object that includes error details
+    return { error: true, message: 'Passwords do not match.' };
+  }
+
+  const supabase = createClient();
+
+  const { error, data } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { error: true, message: error.message };
+  }
+
+  if (data.user) {
+    return { success: true, message: 'Your password has been updated.' };
+  }
+
+  // Fallback error message
+  return { error: true, message: 'Hmm... Something went wrong.' };
 }
 
 export async function updateEmail(formData: FormData) {
@@ -305,32 +381,112 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
+// export async function updateName(formData: FormData) {
+//   const fullName = String(formData.get('fullName')).trim();
+
+//   const supabase = createClient();
+//   const { error, data } = await supabase.auth.updateUser({
+//     data: { full_name: fullName }
+//   });
+
+//   if (error) {
+//     return getErrorRedirect(
+//       '/account',
+//       'Your name could not be updated.',
+//       error.message
+//     );
+//   } else if (data.user) {
+//     return getStatusRedirect(
+//       '/account',
+//       'Success!',
+//       'Your name has been updated.'
+//     );
+//   } else {
+//     return getErrorRedirect(
+//       '/account',
+//       'Hmm... Something went wrong.',
+//       'Your name could not be updated.'
+//     );
+//   }
+// }
+
+// export async function updateName(formData: FormData) {
+//   const fullName = String(formData.get('fullName')).trim();
+//   const supabase = createClient();
+
+//   const { data: userDetails, error: userError } = await supabase
+//     .from('users')
+//     .select('id')
+//     .single();
+
+//   if (userError) {
+//     console.error('Failed to retrieve user details:', userError.message);
+//     return getErrorRedirect(
+//       '/account',
+//       'User details could not be retrieved.',
+//       userError.message
+//     );
+//   }
+//   const { error } = await supabase
+//     .from('users')
+//     .update({ full_name: fullName })
+//     .match({ id: userDetails?.id })
+//     .single();
+
+//   if (error) {
+//     console.error('Update error:', error.message);
+//     return getErrorRedirect(
+//       '/account',
+//       'Your name could not be updated.',
+//       error.message
+//     );
+//   } else {
+//     return getStatusRedirect(
+//       '/account',
+//       'Success!',
+//       'Your name has been updated.'
+//     );
+//   }
+// }
+
 export async function updateName(formData: FormData) {
-  // Get form data
   const fullName = String(formData.get('fullName')).trim();
-
   const supabase = createClient();
-  const { error, data } = await supabase.auth.updateUser({
-    data: { full_name: fullName }
-  });
 
-  if (error) {
+  // Retrieve the user's ID from the custom users table
+  const { data: userDetails, error: userDetailsError } = await supabase
+    .from('users')
+    .select('id')
+    .single();
+
+  if (userDetailsError) {
+    console.error('Failed to retrieve user details:', userDetailsError.message);
     return getErrorRedirect(
       '/account',
-      'Your name could not be updated.',
-      error.message
+      'User details could not be retrieved.',
+      userDetailsError.message
     );
-  } else if (data.user) {
+  }
+
+  // Update the name in the custom users table
+  const { error: usersUpdateError } = await supabase
+    .from('users')
+    .update({ full_name: fullName })
+    .match({ id: userDetails?.id })
+    .single();
+
+  if (usersUpdateError) {
+    console.error('Failed to update users table:', usersUpdateError.message);
+    return getErrorRedirect(
+      '/account',
+      'Users table update failed.',
+      usersUpdateError.message
+    );
+  } else {
     return getStatusRedirect(
       '/account',
       'Success!',
       'Your name has been updated.'
-    );
-  } else {
-    return getErrorRedirect(
-      '/account',
-      'Hmm... Something went wrong.',
-      'Your name could not be updated.'
     );
   }
 }

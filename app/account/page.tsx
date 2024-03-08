@@ -1,11 +1,16 @@
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
+import PasswordForm from '@/components/ui/AccountForms/PasswordForm';
+import { updatePassword } from '@/utils/auth-helpers/server';
+import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { createClient } from '@/utils/supabase/server';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function Account() {
   const supabase = createClient();
+  const redirectMethod = getRedirectMethod();
 
   const {
     data: { user }
@@ -29,6 +34,7 @@ export default async function Account() {
   if (!user) {
     return redirect('/signin');
   }
+  // console.log('userDetails: ', userDetails);
 
   return (
     <section className="mb-32 bg-black">
@@ -46,6 +52,8 @@ export default async function Account() {
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
+        <PasswordForm />
+        {/* <Link href={'signin/update_password'}>Update password </Link> */}
       </div>
     </section>
   );
