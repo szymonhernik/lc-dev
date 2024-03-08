@@ -2,23 +2,28 @@
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import {
-  updateName,
-  updatePassword,
-  updatePasswordInAccountForm
-} from '@/utils/auth-helpers/server';
+import { updatePasswordInAccountForm } from '@/utils/auth-helpers/server';
+import { useRef, useState } from 'react';
 
-// import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
 interface UpdatePasswordProps {
   redirectMethod: string;
 }
+interface State {
+  message: string;
+  error?: boolean;
+  pending?: boolean;
+}
 export default function PasswordForm() {
-  const initialState = { message: '' };
+  const initialState = { message: '', error: false };
+  // const initialState: State = { message: '', error: false };
+  const { pending, data, method, action } = useFormStatus();
   const [state, formAction] = useFormState(
     updatePasswordInAccountForm,
     initialState
   );
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <Card
@@ -38,7 +43,7 @@ export default function PasswordForm() {
           <Button
             variant="slim"
             type="submit"
-            loading={state.pending}
+            loading={pending}
             form="passwordUpdateForm"
           >
             Update Password
@@ -51,7 +56,11 @@ export default function PasswordForm() {
           noValidate={true}
           id="passwordUpdateForm"
           className="mb-4"
-          action={formAction} // Use formAction for the form's action prop
+          ref={formRef}
+          action={async (formData) => {
+            await formAction(formData);
+            formRef.current?.reset();
+          }}
         >
           <div className="grid gap-2">
             <div className="grid gap-1">

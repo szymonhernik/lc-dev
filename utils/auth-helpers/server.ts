@@ -312,9 +312,13 @@ export async function updatePassword(formData: FormData) {
 
 //   return redirectPath;
 // }
-export async function updatePasswordInAccountForm(formData: FormData) {
+export async function updatePasswordInAccountForm(
+  prevState: any,
+  formData: FormData
+) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+  // console.log('password', password);
 
   if (password !== passwordConfirm) {
     // For Server Actions, consider returning an object that includes error details
