@@ -312,10 +312,7 @@ export async function updatePassword(formData: FormData) {
 
 //   return redirectPath;
 // }
-export async function updatePasswordInAccount(
-  prevState: any,
-  formData: FormData
-) {
+export async function updatePasswordInAccountForm(formData: FormData) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
 

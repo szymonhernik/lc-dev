@@ -52,7 +52,7 @@ export default async function Account() {
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
-        <PasswordForm />
+        {/* <PasswordForm /> */}
         {/* <Link href={'signin/update_password'}>Update password </Link> */}
       </div>
     </section>

@@ -5,12 +5,10 @@ import Card from '@/components/ui/Card';
 import {
   updateName,
   updatePassword,
-  updatePasswordInAccount
+  updatePasswordInAccountForm
 } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useFormState } from 'react-dom';
+
+// import { useFormState } from 'react-dom';
 
 interface UpdatePasswordProps {
   redirectMethod: string;
@@ -18,7 +16,7 @@ interface UpdatePasswordProps {
 export default function PasswordForm() {
   const initialState = { message: '' };
   const [state, formAction] = useFormState(
-    updatePasswordInAccount,
+    updatePasswordInAccountForm,
     initialState
   );
 
@@ -28,12 +26,14 @@ export default function PasswordForm() {
       description="Please enter your new password."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          {state.message && (
+          {state.message ? (
             <p
               className={`pb-4 sm:pb-0 ${state.error ? 'text-red-500' : 'text-green-500'}`}
             >
               {state.message}
             </p>
+          ) : (
+            <p className={`pb-4 sm:pb-0 `}></p>
           )}
           <Button
             variant="slim"
