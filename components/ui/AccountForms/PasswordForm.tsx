@@ -7,17 +7,9 @@ import { useRef, useState } from 'react';
 
 import { useFormState, useFormStatus } from 'react-dom';
 
-interface UpdatePasswordProps {
-  redirectMethod: string;
-}
-interface State {
-  message: string;
-  error?: boolean;
-  pending?: boolean;
-}
 export default function PasswordForm() {
   const initialState = { message: '', error: false };
-  // const initialState: State = { message: '', error: false };
+
   const { pending, data, method, action } = useFormStatus();
   const [state, formAction] = useFormState(
     updatePasswordInAccountForm,

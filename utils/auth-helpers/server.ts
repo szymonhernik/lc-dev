@@ -318,10 +318,8 @@ export async function updatePasswordInAccountForm(
 ) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
-  // console.log('password', password);
 
   if (password !== passwordConfirm) {
-    // For Server Actions, consider returning an object that includes error details
     return { error: true, message: 'Passwords do not match.' };
   }
 
