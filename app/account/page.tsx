@@ -19,6 +19,9 @@ export default async function Account() {
     .select('*')
     .single();
 
+  if (!user) {
+    return redirect('/signin');
+  }
   // const { data: subscription, error } = await supabase
   //   .from('subscriptions')
   //   .select('*, prices(*, products(*))')
@@ -28,10 +31,6 @@ export default async function Account() {
   // if (error) {
   //   console.log(error);
   // }
-
-  if (!user) {
-    return redirect('/signin');
-  }
 
   return (
     <>

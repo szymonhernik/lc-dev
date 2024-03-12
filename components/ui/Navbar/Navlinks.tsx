@@ -30,6 +30,10 @@ export default function Navlinks({ user }: NavlinksProps) {
               Account
             </Link>
           )}
+
+          <Link href="/articles" className={s.link}>
+            Private Page
+          </Link>
         </nav>
       </div>
       <div className="flex justify-end space-x-8">

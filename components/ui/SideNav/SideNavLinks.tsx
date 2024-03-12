@@ -11,6 +11,10 @@ const links = [
   {
     name: 'Subscription',
     href: '/account/subscription'
+  },
+  {
+    name: 'Notifications',
+    href: '/account/notifications'
   }
 ];
 
