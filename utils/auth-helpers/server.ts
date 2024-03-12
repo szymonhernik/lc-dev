@@ -332,13 +332,7 @@ export async function updatePasswordInAccountForm(
 
   if (data.user) {
     console.log(data);
-
-    // return { success: true, message: 'Your password has been updated.' };
-    return getStatusRedirect(
-      '/account',
-      'Success!',
-      'Your name has been updated.'
-    );
+    return { success: true, message: 'Your password has been updated.' };
   }
 
   // Fallback error message
