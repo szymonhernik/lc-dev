@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getURL, getErrorRedirect, getStatusRedirect } from 'utils/helpers';
 import { getAuthTypes } from 'utils/auth-helpers/settings';
+import { revalidatePath } from 'next/cache';
 
 function isValidEmail(email: string) {
   var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -265,79 +266,81 @@ export async function updatePassword(formData: FormData) {
   return redirectPath;
 }
 
-// export async function updatePasswordInAccount(formData: FormData) {
-//   const password = String(formData.get('password')).trim();
-//   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
-//   let redirectPath: string;
-
-//   // Check that the password and confirmation match
-
-//   if (password !== passwordConfirm) {
-//     console.log('password:', password);
-//     console.log('passwordConfirm:', passwordConfirm);
-
-//     redirectPath = getErrorRedirect(
-//       '/account',
-//       'Your password could not be updated.',
-//       'Passwords do not match.'
-//     );
-//     return redirectPath;
-//   }
-
-//   const supabase = createClient();
-//   const { error, data } = await supabase.auth.updateUser({
-//     password
-//   });
-
-//   if (error) {
-//     redirectPath = getErrorRedirect(
-//       '/account',
-//       'Your password could not be updated.',
-//       error.message
-//     );
-//   } else if (data.user) {
-//     redirectPath = getStatusRedirect(
-//       '/account',
-//       'Success!',
-//       'Your password has been updated.'
-//     );
-//   } else {
-//     redirectPath = getErrorRedirect(
-//       '/account',
-//       'Hmm... Something went wrong.',
-//       'Your password could not be updated.'
-//     );
-//   }
-
-//   return redirectPath;
-// }
-export async function updatePasswordInAccountForm(
-  prevState: any,
-  formData: FormData
-) {
+export async function updatePasswordInAccount(formData: FormData) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+  let redirectPath: string;
 
+  // Check that the password and confirmation match
   if (password !== passwordConfirm) {
-    return { error: true, message: 'Passwords do not match.' };
+    redirectPath = getErrorRedirect(
+      '/account',
+      'Your password could not be updated.',
+      'Passwords do not match.'
+    );
+    return redirectPath;
   }
 
   const supabase = createClient();
-
-  const { error, data } = await supabase.auth.updateUser({ password });
+  const { error, data } = await supabase.auth.updateUser({
+    password
+  });
 
   if (error) {
-    return { error: true, message: error.message };
+    redirectPath = getErrorRedirect(
+      '/account',
+      'Your password could not be updated.',
+      error.message
+    );
+  } else if (data.user) {
+    redirectPath = getStatusRedirect(
+      '/account',
+      'Success!',
+      'Your password has been updated.'
+    );
+  } else {
+    redirectPath = getErrorRedirect(
+      '/account',
+      'Hmm... Something went wrong.',
+      'Your password could not be updated.'
+    );
   }
 
-  if (data.user) {
-    console.log(data);
-    return { success: true, message: 'Your password has been updated.' };
-  }
-
-  // Fallback error message
-  return { error: true, message: 'Hmm... Something went wrong.' };
+  return redirectPath;
 }
+// export async function updatePasswordInAccountForm(
+//   prevState: any,
+//   formData: FormData
+// ) {
+//   const password = String(formData.get('password')).trim();
+//   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+
+//   if (password !== passwordConfirm) {
+//     return { error: true, message: 'Passwords do not match.' };
+//   }
+
+//   const supabase = createClient();
+
+//   const { error, data } = await supabase.auth.updateUser({ password });
+
+//   if (error) {
+//     return { error: true, message: error.message };
+//   }
+
+//   if (data.user) {
+//     // return { success: true, message: 'Your password has been updated.' };
+//     console.log('happened');
+
+//     return getStatusRedirect(
+//       '/',
+//       'Success!',
+//       'Your password has been updated.'
+//     );
+//   }
+
+//   // Fallback error message
+//   return { error: true, message: 'Hmm... Something went wrong.' };
+// }
 
 export async function updateEmail(formData: FormData) {
   // Get form data

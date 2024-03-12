@@ -2,20 +2,23 @@
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import { updatePasswordInAccountForm } from '@/utils/auth-helpers/server';
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { updatePasswordInAccount } from '@/utils/auth-helpers/server';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { useFormState, useFormStatus } from 'react-dom';
 
 export default function PasswordForm() {
-  const initialState = { message: '', error: false };
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { pending, data, method, action } = useFormStatus();
-  const [state, formAction] = useFormState(
-    updatePasswordInAccountForm,
-    initialState
-  );
-  const formRef = useRef<HTMLFormElement>(null);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true); // Disable the button while the request is being handled
+    await handleRequest(e, updatePasswordInAccount, router);
+
+    setIsSubmitting(false);
+  };
 
   return (
     <Card
@@ -23,19 +26,12 @@ export default function PasswordForm() {
       description="Please enter your new password."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          {typeof state === 'object' && state.message ? (
-            <p
-              className={`pb-4 sm:pb-0 ${state.error ? 'text-red-500' : 'text-green-500'}`}
-            >
-              {state.message}
-            </p>
-          ) : (
-            <p className={`pb-4 sm:pb-0 `}></p>
-          )}
+          <p className={`pb-4 sm:pb-0 `}>Type new password</p>
+
           <Button
             variant="slim"
             type="submit"
-            loading={pending}
+            loading={isSubmitting}
             form="passwordUpdateForm"
           >
             Update Password
@@ -48,11 +44,7 @@ export default function PasswordForm() {
           noValidate={true}
           id="passwordUpdateForm"
           className="mb-4"
-          ref={formRef}
-          action={formAction}
-          // action={async (formData) => {
-          //   await formAction(formData);
-          // }}
+          onSubmit={(e) => handleSubmit(e)}
         >
           <div className="grid gap-2">
             <div className="grid gap-1">
