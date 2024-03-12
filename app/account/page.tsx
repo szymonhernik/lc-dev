@@ -5,7 +5,6 @@ import PasswordForm from '@/components/ui/AccountForms/PasswordForm';
 
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { createClient } from '@/utils/supabase/server';
-
 import { redirect } from 'next/navigation';
 
 export default async function Account() {

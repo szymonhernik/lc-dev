@@ -54,6 +54,9 @@ export default async function SignIn({
     return redirect('/signin');
   }
 
+  //on expired reset password link in my email.http://localhost:3000/signin/password_signin#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired
+  //show this error to the user
+
   return (
     <div className="flex justify-center height-screen-helper">
       <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
@@ -77,6 +80,7 @@ export default async function SignIn({
               redirectMethod={redirectMethod}
             />
           )}
+
           {viewProp === 'email_signin' && (
             <EmailSignIn
               allowPassword={allowPassword}
