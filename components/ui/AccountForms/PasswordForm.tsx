@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { updatePasswordInAccountForm } from '@/utils/auth-helpers/server';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useFormState, useFormStatus } from 'react-dom';
 
@@ -16,6 +16,13 @@ export default function PasswordForm() {
     initialState
   );
   const formRef = useRef<HTMLFormElement>(null);
+
+  // useEffect(() => {
+  //   // Check if there's a success and the form reference exists
+  //   if (state.success && formRef.current) {
+  //     formRef.current.reset(); // Reset form only on success
+  //   }
+  // }, [state.success]); // Dependency array includes state.success to react on its change
 
   return (
     <Card
@@ -49,10 +56,10 @@ export default function PasswordForm() {
           id="passwordUpdateForm"
           className="mb-4"
           ref={formRef}
-          action={async (formData) => {
-            await formAction(formData);
-            formRef.current?.reset();
-          }}
+          action={formAction}
+          // action={async (formData) => {
+          //   await formAction(formData);
+          // }}
         >
           <div className="grid gap-2">
             <div className="grid gap-1">

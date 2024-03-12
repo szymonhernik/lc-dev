@@ -2,15 +2,14 @@ import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
 import PasswordForm from '@/components/ui/AccountForms/PasswordForm';
-import { updatePassword } from '@/utils/auth-helpers/server';
+
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { createClient } from '@/utils/supabase/server';
-import Link from 'next/link';
+
 import { redirect } from 'next/navigation';
 
 export default async function Account() {
   const supabase = createClient();
-  const redirectMethod = getRedirectMethod();
 
   const {
     data: { user }
@@ -50,7 +49,8 @@ export default async function Account() {
       </div>
       <div className="p-4">
         <CustomerPortalForm subscription={subscription} />
-        <NameForm userName={userDetails?.full_name ?? ''} />
+        {/* <NameForm userName={userDetails?.full_name ?? ''} /> */}
+        <NameForm userName={userDetails?.full_name ?? ''} userId={user?.id} />
         <EmailForm userEmail={user.email} />
         <PasswordForm />
         {/* <Link href={'signin/update_password'}>Update password </Link> */}

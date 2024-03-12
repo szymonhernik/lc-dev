@@ -236,6 +236,7 @@ export async function updatePassword(formData: FormData) {
       'Your password could not be updated.',
       'Passwords do not match.'
     );
+    return redirectPath;
   }
 
   const supabase = createClient();
@@ -332,7 +333,14 @@ export async function updatePasswordInAccountForm(
   }
 
   if (data.user) {
-    return { success: true, message: 'Your password has been updated.' };
+    console.log(data);
+
+    // return { success: true, message: 'Your password has been updated.' };
+    return getStatusRedirect(
+      '/account',
+      'Success!',
+      'Your name has been updated.'
+    );
   }
 
   // Fallback error message
@@ -448,44 +456,79 @@ export async function updateEmail(formData: FormData) {
 //   }
 // }
 
+// export async function updateName(formData: FormData) {
+//   const fullName = String(formData.get('fullName')).trim();
+//   const supabase = createClient();
+
+//   // Retrieve the user's ID from the custom users table
+//   const { data: userDetails, error: userDetailsError } = await supabase
+//     .from('users')
+//     .select('id')
+//     .single();
+
+//   if (userDetailsError) {
+//     console.error('Failed to retrieve user details:', userDetailsError.message);
+//     return getErrorRedirect(
+//       '/account',
+//       'User details could not be retrieved.',
+//       userDetailsError.message
+//     );
+//   }
+
+//   // Update the name in the custom users table
+//   const { error: usersUpdateError } = await supabase
+//     .from('users')
+//     .update({ full_name: fullName })
+//     .match({ id: userDetails?.id })
+//     .single();
+
+//   if (usersUpdateError) {
+//     console.error('Failed to update users table:', usersUpdateError.message);
+//     return getErrorRedirect(
+//       '/account',
+//       'Users table update failed.',
+//       usersUpdateError.message
+//     );
+//   } else {
+//     return getStatusRedirect(
+//       '/account',
+//       'Success!',
+//       'Your name has been updated.'
+//     );
+//   }
+// }
+
 export async function updateName(formData: FormData) {
   const fullName = String(formData.get('fullName')).trim();
+  const userId = String(formData.get('userId'));
+
   const supabase = createClient();
-
-  // Retrieve the user's ID from the custom users table
-  const { data: userDetails, error: userDetailsError } = await supabase
-    .from('users')
-    .select('id')
-    .single();
-
-  if (userDetailsError) {
-    console.error('Failed to retrieve user details:', userDetailsError.message);
-    return getErrorRedirect(
-      '/account',
-      'User details could not be retrieved.',
-      userDetailsError.message
-    );
-  }
-
-  // Update the name in the custom users table
-  const { error: usersUpdateError } = await supabase
+  const { error, data } = await supabase
     .from('users')
     .update({ full_name: fullName })
-    .match({ id: userDetails?.id })
+    .eq('id', userId)
+    .select('full_name')
     .single();
 
-  if (usersUpdateError) {
-    console.error('Failed to update users table:', usersUpdateError.message);
+  console.log('data', data);
+
+  if (error) {
     return getErrorRedirect(
       '/account',
-      'Users table update failed.',
-      usersUpdateError.message
+      'Your name could not be updated.',
+      error.message
     );
-  } else {
+  } else if (data) {
     return getStatusRedirect(
       '/account',
       'Success!',
       'Your name has been updated.'
+    );
+  } else {
+    return getErrorRedirect(
+      '/account',
+      'Hmm... Something went wrong.',
+      'Your name could not be updated.'
     );
   }
 }
