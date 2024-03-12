@@ -17,20 +17,13 @@ export default function PasswordForm() {
   );
   const formRef = useRef<HTMLFormElement>(null);
 
-  // useEffect(() => {
-  //   // Check if there's a success and the form reference exists
-  //   if (state.success && formRef.current) {
-  //     formRef.current.reset(); // Reset form only on success
-  //   }
-  // }, [state.success]); // Dependency array includes state.success to react on its change
-
   return (
     <Card
       title="Update password"
       description="Please enter your new password."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          {state.message ? (
+          {typeof state === 'object' && state.message ? (
             <p
               className={`pb-4 sm:pb-0 ${state.error ? 'text-red-500' : 'text-green-500'}`}
             >
