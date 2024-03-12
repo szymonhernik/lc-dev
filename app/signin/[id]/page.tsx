@@ -16,6 +16,7 @@ import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn';
 import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword';
 import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
 import SignUp from '@/components/ui/AuthForms/Signup';
+import { Suspense } from 'react';
 
 export default async function SignIn({
   params,
@@ -82,11 +83,13 @@ export default async function SignIn({
           )}
 
           {viewProp === 'email_signin' && (
-            <EmailSignIn
-              allowPassword={allowPassword}
-              redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
-            />
+            <Suspense fallback={null}>
+              <EmailSignIn
+                allowPassword={allowPassword}
+                redirectMethod={redirectMethod}
+                disableButton={searchParams.disable_button}
+              />
+            </Suspense>
           )}
           {viewProp === 'forgot_password' && (
             <ForgotPassword

@@ -143,8 +143,6 @@ export async function signInWithPassword(formData: FormData) {
     password
   });
 
-  // console.log('data', data);
-
   if (error) {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',

@@ -4,9 +4,8 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { signInWithPassword } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
-import { Toaster } from '../Toasts/toaster';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -26,6 +25,13 @@ export default function PasswordSignIn({
     await handleRequest(e, signInWithPassword, router);
     setIsSubmitting(false);
   };
+
+  //console log things like (#error=unauthorized_client&error_code=401&error_description=Email+link+is+invalid+or+has+expired) from the url
+  // useEffect(() => {
+  //   const { url } = window.location;
+  //   const params = new URLSearchParams(url);
+  //   console.log('params', params);
+  // }, []);
 
   return (
     <div className="my-8">
