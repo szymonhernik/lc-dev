@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import {
   CustomCheckoutProvider,
   PaymentElement,
@@ -12,7 +12,6 @@ import CheckoutForm from '@/components/ui/CustomCheckout/CheckoutPage';
 const stripePromise = getStripe();
 export default function CustomCheckoutPage() {
   const router = useRouter();
-
   const searchParams = useSearchParams();
   let clientSecret = searchParams.get('clientSecret');
 
@@ -22,9 +21,11 @@ export default function CustomCheckoutPage() {
   //   console.log('clientSecret', clientSecret);
 
   return (
-    <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
-      <CheckoutForm />
-    </CustomCheckoutProvider>
+    <Suspense>
+      <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
+        <CheckoutForm />
+      </CustomCheckoutProvider>
+    </Suspense>
     // <p>test</p>
   );
 }
