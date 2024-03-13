@@ -11,7 +11,6 @@ import CheckoutForm from '@/components/ui/CustomCheckout/CheckoutPage';
 
 const stripePromise = getStripe();
 export default function CustomCheckoutPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   let clientSecret = searchParams.get('clientSecret');
 
