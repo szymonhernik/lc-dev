@@ -25,7 +25,10 @@ interface Props {
   subscription: SubscriptionWithPriceAndProduct | null;
 }
 
-export default function CustomerPortalForm({ subscription }: Props) {
+//how to get clientSecret from stripe
+//https://stripe.com/docs/payments/checkout/one-time#create-checkout-session
+
+export default function CustomCheckout({ subscription }: Props) {
   const router = useRouter();
   const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -1,3 +1,4 @@
+import CustomCheckout from '@/components/ui/AccountForms/CustomCheckout';
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
@@ -34,7 +35,7 @@ export default async function SubscriptionPage() {
         </div>
       </div>
       <div className="p-4">
-        <CustomerPortalForm subscription={subscription} />
+        <CustomCheckout subscription={subscription} />
       </div>
     </>
   );

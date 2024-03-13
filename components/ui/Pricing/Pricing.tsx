@@ -54,7 +54,7 @@ export default function Pricing({ user, products, subscription }: Props) {
       return router.push('/signin/signup');
     }
 
-    const { errorRedirect, sessionId } = await checkoutWithStripe(
+    const { errorRedirect, sessionId, clientSecret } = await checkoutWithStripe(
       price,
       currentPath
     );
@@ -76,7 +76,8 @@ export default function Pricing({ user, products, subscription }: Props) {
     }
 
     const stripe = await getStripe();
-    stripe?.redirectToCheckout({ sessionId });
+    // stripe?.redirectToCheckout({ sessionId });
+    router.push(`/checkout-custom-stripe?clientSecret=${clientSecret}`);
 
     setPriceIdLoading(undefined);
   };

@@ -16,6 +16,7 @@ type Price = Tables<'prices'>;
 type CheckoutResponse = {
   errorRedirect?: string;
   sessionId?: string;
+  clientSecret?: string | null; // Add this line
 };
 
 export async function checkoutWithStripe(
@@ -60,8 +61,11 @@ export async function checkoutWithStripe(
           quantity: 1
         }
       ],
-      cancel_url: getURL(),
-      success_url: getURL(redirectPath)
+      //ts ignore
+      // @ts-ignore
+      ui_mode: 'custom'
+      // cancel_url: getURL(),
+      // success_url: getURL(redirectPath)
     };
 
     console.log(
@@ -94,7 +98,7 @@ export async function checkoutWithStripe(
 
     // Instead of returning a Response, just return the data or error.
     if (session) {
-      return { sessionId: session.id };
+      return { sessionId: session.id, clientSecret: session.client_secret };
     } else {
       throw new Error('Unable to create checkout session.');
     }
