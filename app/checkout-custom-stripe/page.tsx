@@ -20,11 +20,16 @@ export default function CustomCheckoutPage() {
   //   console.log('clientSecret', clientSecret);
 
   return (
-    <Suspense>
-      <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
-        <CheckoutForm />
-      </CustomCheckoutProvider>
-    </Suspense>
-    // <p>test</p>
+    <>
+      <Suspense>
+        <CustomCheckoutProvider
+          stripe={stripePromise}
+          options={{ clientSecret }}
+        >
+          <CheckoutForm />
+        </CustomCheckoutProvider>
+      </Suspense>
+      <p>test</p>
+    </>
   );
 }
