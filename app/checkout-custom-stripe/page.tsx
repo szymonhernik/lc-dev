@@ -12,11 +12,12 @@ import CheckoutForm from '@/components/ui/CustomCheckout/CheckoutPage';
 const stripePromise = getStripe();
 export default function CustomCheckoutPage() {
   const searchParams = useSearchParams();
-  let clientSecret = searchParams.get('clientSecret');
+  const clientSecret = new URLSearchParams(searchParams).get('clientSecret');
+  // let clientSecret = params.get('clientSecret');
 
   // Optionally, handle loading state and errors here
   if (!clientSecret) return <div>Loading...</div>;
-  //   console.log('searchParams', searchParams);
+  // console.log('params', params);
   //   console.log('clientSecret', clientSecret);
 
   return (
