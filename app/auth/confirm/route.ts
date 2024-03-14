@@ -1,3 +1,4 @@
+import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -5,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const requestUrl = new URL(request.url);
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type') as EmailOtpType | null;
   const next = searchParams.get('next') ?? '/';
@@ -36,11 +38,26 @@ export async function GET(request: NextRequest) {
       token_hash
     });
     if (!error) {
-      return NextResponse.redirect(redirectTo);
+      return NextResponse.redirect(
+        getStatusRedirect(
+          `${requestUrl.origin}/signin/update_password`,
+          'You are now signed in.',
+          'Please enter a new password for your account.'
+        )
+      );
+    } else if (error) {
+      return NextResponse.redirect(
+        getErrorRedirect(
+          `${requestUrl.origin}/`,
+          'Ups... something went wrong',
+          error.message
+        )
+      );
     }
   }
 
   // return the user to an error page with some instructions
   redirectTo.pathname = '/auth/auth-code-error';
+
   return NextResponse.redirect(redirectTo);
 }
