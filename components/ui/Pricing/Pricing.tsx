@@ -40,6 +40,8 @@ export default function Pricing({ user, products, subscription }: Props) {
       )
     )
   );
+  // console.log('products', products);
+
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
@@ -76,6 +78,8 @@ export default function Pricing({ user, products, subscription }: Props) {
     }
 
     const stripe = await getStripe();
+    // console.log('price', price);
+
     // stripe?.redirectToCheckout({ sessionId });
     router.push(`/checkout-custom-stripe?clientSecret=${clientSecret}`);
 

@@ -123,6 +123,7 @@ export async function checkoutWithStripe(
   }
 }
 
+// Portal to manage subscription from the account level
 export async function createStripePortal(currentPath: string) {
   try {
     const supabase = createClient();
