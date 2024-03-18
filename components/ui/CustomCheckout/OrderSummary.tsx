@@ -14,14 +14,18 @@ export default function OrderSummary() {
     style: 'currency',
     currency: currency!,
     minimumFractionDigits: 0
-  }).format((total.subtotal || 0) / 100);
+  }).format((lineItems[0].unitAmount || 0) / 100);
 
   return (
-    <>
-      <h1>Order Summary</h1>
-      <p>Items: {lineItems[0].name}</p>
-      <p>Description: {lineItems[0].description}</p>
-      <p>Subtotal: {priceString}</p>
-    </>
+    <div>
+      <h1 className="font-bold text-xl mb-4">Order Summary</h1>
+      <div className="bg-zinc-900 rounded p-4  w-3/4">
+        <p>{lineItems[0].name}</p>
+
+        <div className="font-bold flex justify-between">
+          <p>Subtotal</p> <p>{priceString}</p>
+        </div>
+      </div>
+    </div>
   );
 }

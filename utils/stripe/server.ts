@@ -63,7 +63,8 @@ export async function checkoutWithStripe(
       ],
       //ts ignore
       // @ts-ignore
-      ui_mode: 'custom'
+      ui_mode: 'custom',
+      return_url: 'http://localhost:3000/'
       // cancel_url: getURL(),
       // success_url: getURL(redirectPath)
     };

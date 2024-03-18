@@ -1,9 +1,14 @@
-import { PaymentElement } from '@stripe/react-stripe-js';
+import { AddressElement, PaymentElement } from '@stripe/react-stripe-js';
 
 export default function CheckoutForm() {
   return (
-    <div className="max-w-md mx-auto mt-64">
+    <div className="flex flex-col gap-4 ">
       <form>
+        <h1 className="text-xl font-bold mb-4">Billing information</h1>
+        <AddressElement options={{ mode: 'billing' }} />
+      </form>
+      <form>
+        <h1 className="text-xl font-bold mb-4">Payment information</h1>
         <PaymentElement />
       </form>
     </div>

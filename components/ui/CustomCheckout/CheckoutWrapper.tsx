@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { getStripe } from '@/utils/stripe/client';
 import CheckoutForm from '@/components/ui/CustomCheckout/CheckoutPage';
 import OrderSummary from './OrderSummary';
+import PayButton from './PayButton';
 
 const stripePromise = getStripe();
 
@@ -15,10 +16,13 @@ export default function CheckoutWrapper() {
   if (!clientSecret) return <div>Loading...</div>;
 
   return (
-    <div className="">
+    <div className="mx-auto max-w-lg py-64">
       <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
-        <OrderSummary />
-        <CheckoutForm />
+        <div className="flex flex-col gap-8">
+          <OrderSummary />
+          <CheckoutForm />
+          <PayButton />
+        </div>
       </CustomCheckoutProvider>
     </div>
   );
