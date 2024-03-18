@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/utils/stripe/client';
-import { checkoutWithStripe } from '@/utils/stripe/server';
+import { checkoutWithStripe, createStripePortal } from '@/utils/stripe/server';
 import { getErrorRedirect } from '@/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
@@ -47,6 +47,12 @@ export default function Pricing({ user, products, subscription }: Props) {
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
+
+  const handleStripePortalRequest = async () => {
+    const redirectUrl = await createStripePortal(currentPath);
+
+    return router.push(redirectUrl);
+  };
 
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
@@ -191,7 +197,11 @@ export default function Pricing({ user, products, subscription }: Props) {
                       variant="slim"
                       type="button"
                       loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
+                      onClick={() =>
+                        subscription
+                          ? handleStripePortalRequest()
+                          : handleStripeCheckout(price)
+                      }
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
                       {subscription ? 'Manage' : 'Subscribe'}
