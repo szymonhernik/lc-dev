@@ -34,6 +34,9 @@ export default function Navlinks({ user }: NavlinksProps) {
           <Link href="/articles" className={s.link}>
             Private Page
           </Link>
+          <Link href="/protected" className={s.link}>
+            Protected
+          </Link>
         </nav>
       </div>
       <div className="flex justify-end space-x-8">
