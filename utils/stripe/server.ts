@@ -68,7 +68,7 @@ export async function checkoutWithStripe(
       // cancel_url: getURL(),
       // success_url: getURL(redirectPath)
     };
-
+    console.log('Got here from custom checkout');
     console.log(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)
@@ -92,6 +92,7 @@ export async function checkoutWithStripe(
     let session;
     try {
       session = await stripe.checkout.sessions.create(params);
+      // console.log('Session:', session);
     } catch (err) {
       console.error(err);
       throw new Error('Unable to create checkout session.');

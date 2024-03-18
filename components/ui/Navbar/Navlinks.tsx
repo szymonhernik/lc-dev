@@ -30,10 +30,6 @@ export default function Navlinks({ user }: NavlinksProps) {
               Account
             </Link>
           )}
-
-          <Link href="/articles" className={s.link}>
-            Private Page
-          </Link>
           <Link href="/protected" className={s.link}>
             Protected
           </Link>
