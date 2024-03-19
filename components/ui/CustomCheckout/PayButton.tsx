@@ -6,26 +6,41 @@ import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 
 export default function PayButton() {
-  const { total, confirm, canConfirm, confirmationRequirements } =
-    useCustomCheckout();
+  const { confirm, canConfirm, confirmationRequirements } = useCustomCheckout();
 
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+  const [messageBody, setMessageBody] = useState('');
 
   const handleClick = async () => {
     setLoading(true);
-
-    confirm().then(() => {
+    //  confirm() method returns a Promise that resolves to an object with one of the following types
+    //  { session: CheckoutSession }
+    //  { error: StripeError }
+    confirm().then((result) => {
       setLoading(false);
-
-      return router.push('/payment-success');
+      if (result.session) {
+        return router.push('/payment-success');
+      } else {
+        // Use result.error
+        setMessageBody(result.error.message || 'An error occurred');
+      }
     });
   };
 
   return (
-    <button disabled={!canConfirm || loading} onClick={handleClick}>
-      {loading ? 'Processing' : 'Pay'}
-    </button>
+    <>
+      <button disabled={!canConfirm || loading} onClick={handleClick}>
+        {loading ? 'Processing' : 'Pay'}
+      </button>
+      <div
+        id="messages"
+        role="alert"
+        style={messageBody ? { display: 'block' } : {}}
+      >
+        {messageBody}
+      </div>
+    </>
   );
 }
