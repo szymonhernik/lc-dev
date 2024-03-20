@@ -13,7 +13,8 @@ export default function CheckoutWrapper() {
   const searchParams = useSearchParams();
   const clientSecret = new URLSearchParams(searchParams).get('clientSecret');
 
-  if (!clientSecret) return <div>Loading...</div>;
+  if (!clientSecret)
+    return <div>Session unknown. Please try subscribing again.</div>;
 
   return (
     <div className="mx-auto max-w-lg py-64">
@@ -21,9 +22,9 @@ export default function CheckoutWrapper() {
         <div className="flex flex-col gap-8">
           <OrderSummary />
           <CheckoutForm />
-          {/* <PayButton /> */}
         </div>
       </CustomCheckoutProvider>
+      {/* <h1>Custom checkout</h1> */}
     </div>
   );
 }

@@ -9,7 +9,10 @@ import { getErrorRedirect } from '@/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import SimpleModal from '../CustomCheckout/SimpleModal';
+import ModalCheckout from '../CustomCheckout/ModalCheckout';
+import { Stripe } from '@stripe/stripe-js';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -47,6 +50,13 @@ export default function Pricing({ user, products, subscription }: Props) {
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
+  const [clientSecret, setClientSecret] = useState<string>('');
+
+  useEffect(() => {
+    console.log('isModalOpen', isModalOpen);
+  }, [isModalOpen]);
 
   const handleStripePortalRequest = async () => {
     const redirectUrl = await createStripePortal(currentPath);
@@ -57,10 +67,14 @@ export default function Pricing({ user, products, subscription }: Props) {
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
 
+    console.log('price', price);
+
     if (!user) {
       setPriceIdLoading(undefined);
       return router.push('/signin/signup');
     }
+
+    // router.push(`/checkout-custom-stripe?priceId=${price.id}`);
 
     const { errorRedirect, sessionId, clientSecret } = await checkoutWithStripe(
       price,
@@ -84,17 +98,19 @@ export default function Pricing({ user, products, subscription }: Props) {
     }
 
     const stripe = await getStripe();
-    // console.log('price', price);
+    setStripeInstance(stripe);
+    setClientSecret(clientSecret || '');
+    setIsModalOpen(true);
 
     // stripe?.redirectToCheckout({ sessionId });
-    router.push(`/checkout-custom-stripe?clientSecret=${clientSecret}`);
+    // router.push(`/checkout-custom-stripe?clientSecret=${clientSecret}`);
 
     setPriceIdLoading(undefined);
   };
 
   if (!products.length) {
     return (
-      <section className="bg-black">
+      <section className="bg-black relative">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
           <p className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
@@ -116,6 +132,11 @@ export default function Pricing({ user, products, subscription }: Props) {
   } else {
     return (
       <section className="bg-black">
+        {/* {isModalOpen && <SimpleModal onClose={() => setIsModalOpen(false)} />} */}
+        {isModalOpen && (
+          <ModalCheckout stripe={stripeInstance} clientSecret={clientSecret} />
+        )}
+
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
             <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">

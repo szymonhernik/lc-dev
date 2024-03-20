@@ -11,7 +11,7 @@ export default function AccountSettingsLayout({
       <div className="w-full flex-none md:w-64 fixed top-36 left-">
         <SideNav />
       </div>
-      <section className="mb-32 bg-black">{children}</section>;
+      <section className="mb-32 bg-black">{children}</section>
     </div>
   );
 }

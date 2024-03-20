@@ -67,7 +67,7 @@ export async function checkoutWithStripe(
       ui_mode: 'custom',
       return_url: 'http://localhost:3000/'
     };
-    console.log('Got here from custom checkout');
+
     console.log(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)
@@ -99,7 +99,7 @@ export async function checkoutWithStripe(
 
     // Instead of returning a Response, just return the data or error.
     if (session) {
-      console.log('Session No:', session);
+      // console.log('Session No:', session);
 
       return { sessionId: session.id, clientSecret: session.client_secret };
     } else {
