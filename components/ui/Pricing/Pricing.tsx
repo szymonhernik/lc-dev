@@ -59,13 +59,14 @@ export default function Pricing({ user, products, subscription }: Props) {
 
   useEffect(() => {
     const channel = supabase
-      .channel('supabase_realtime')
+      .channel('user updates stripe subscription')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'subscriptions'
+          table: 'subscriptions',
+          filter: `user_id = ${user?.id}`
         },
         () => {
           router.refresh();

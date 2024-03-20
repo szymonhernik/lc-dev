@@ -17,7 +17,7 @@ export default async function PricingPage() {
   if (error) {
     console.log(error);
   }
-  // console.log('subscription', subscription);
+  console.log('subscription', subscription);
   // console.log('Ddddd');
 
   const { data: products } = await supabase
