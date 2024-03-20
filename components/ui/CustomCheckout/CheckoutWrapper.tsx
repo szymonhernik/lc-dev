@@ -4,7 +4,7 @@ import { CustomCheckoutProvider } from '@stripe/react-stripe-js';
 import { useSearchParams } from 'next/navigation';
 import { getStripe } from '@/utils/stripe/client';
 import CheckoutForm from '@/components/ui/CustomCheckout/CheckoutPage';
-import OrderSummary from './OrderSummary';
+// import OrderSummary from './OrderSummary';
 import PayButton from './PayButton';
 
 const stripePromise = getStripe();
@@ -20,7 +20,7 @@ export default function CheckoutWrapper() {
     <div className="mx-auto max-w-lg py-64">
       <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
         <div className="flex flex-col gap-8">
-          <OrderSummary />
+          {/* <OrderSummary /> */}
           <CheckoutForm />
         </div>
       </CustomCheckoutProvider>
