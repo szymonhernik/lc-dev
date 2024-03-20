@@ -21,7 +21,7 @@ export default function CheckoutWrapper() {
         <div className="flex flex-col gap-8">
           <OrderSummary />
           <CheckoutForm />
-          <PayButton />
+          {/* <PayButton /> */}
         </div>
       </CustomCheckoutProvider>
     </div>

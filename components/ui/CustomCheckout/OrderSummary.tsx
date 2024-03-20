@@ -1,3 +1,4 @@
+'use client';
 import { useCustomCheckout } from '@stripe/react-stripe-js';
 
 export default function OrderSummary() {

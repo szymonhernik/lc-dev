@@ -55,6 +55,7 @@ export async function checkoutWithStripe(
       customer_update: {
         address: 'auto'
       },
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 40,
       line_items: [
         {
           price: price.id,
@@ -65,8 +66,6 @@ export async function checkoutWithStripe(
       // @ts-ignore
       ui_mode: 'custom',
       return_url: 'http://localhost:3000/'
-      // cancel_url: getURL(),
-      // success_url: getURL(redirectPath)
     };
     console.log('Got here from custom checkout');
     console.log(
@@ -100,6 +99,8 @@ export async function checkoutWithStripe(
 
     // Instead of returning a Response, just return the data or error.
     if (session) {
+      console.log('Session No:', session);
+
       return { sessionId: session.id, clientSecret: session.client_secret };
     } else {
       throw new Error('Unable to create checkout session.');

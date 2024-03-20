@@ -1,9 +1,10 @@
+'use client';
 import { getStatusRedirect } from '@/utils/helpers';
 import { useCustomCheckout } from '@stripe/react-stripe-js';
 import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
 
-import { use, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function PayButton() {
   const { confirm, canConfirm, confirmationRequirements } = useCustomCheckout();
@@ -22,6 +23,7 @@ export default function PayButton() {
       setLoading(false);
       if (result.session) {
         return router.push('/payment-success');
+        // console.log('success');
       } else {
         // Use result.error
         setMessageBody(result.error.message || 'An error occurred');
