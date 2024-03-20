@@ -40,7 +40,8 @@ export default function CheckoutForm() {
     confirm().then((result) => {
       setIsSubmitting(false);
       if (result.session) {
-        router.refresh();
+        // router.refresh();
+        router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true);
       } else {
         setMessageBody(result.error.message || 'An error occurred');
@@ -93,8 +94,11 @@ export default function CheckoutForm() {
             <a
               href="/"
               onClick={(e) => {
-                e.preventDefault();
-                window.location.reload();
+                // e.preventDefault();
+                // window.location.reload();
+
+                // router.refresh();
+                router.push('/');
               }}
             >
               Close

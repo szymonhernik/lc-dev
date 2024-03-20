@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import SimpleModal from '../CustomCheckout/SimpleModal';
 import ModalCheckout from '../CustomCheckout/ModalCheckout';
 import { Stripe } from '@stripe/stripe-js';
+import { createClient } from '@/utils/supabase/client';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -54,9 +55,28 @@ export default function Pricing({ user, products, subscription }: Props) {
   const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
   const [clientSecret, setClientSecret] = useState<string>('');
 
+  const supabase = createClient();
+
   useEffect(() => {
-    console.log('isModalOpen', isModalOpen);
-  }, [isModalOpen]);
+    const channel = supabase
+      .channel('supabase_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'subscriptions'
+        },
+        () => {
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
 
   const handleStripePortalRequest = async () => {
     const redirectUrl = await createStripePortal(currentPath);
@@ -67,7 +87,7 @@ export default function Pricing({ user, products, subscription }: Props) {
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
 
-    console.log('price', price);
+    // console.log('price', price);
 
     if (!user) {
       setPriceIdLoading(undefined);
