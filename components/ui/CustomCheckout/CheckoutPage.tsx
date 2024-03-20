@@ -40,17 +40,8 @@ export default function CheckoutForm() {
     confirm().then((result) => {
       setIsSubmitting(false);
       if (result.session) {
+        router.refresh();
         setIsSuccess(true);
-        // router.refresh();
-        // return getStatusRedirect(
-        //   '/account/subscription',
-        //   'success',
-        //   ' success',
-        //   true
-        // );
-
-        // return router.refresh();
-        // return router.refresh().then(() => router.push('/account/subscriptions'));
       } else {
         setMessageBody(result.error.message || 'An error occurred');
       }
