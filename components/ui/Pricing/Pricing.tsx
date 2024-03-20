@@ -65,8 +65,8 @@ export default function Pricing({ user, products, subscription }: Props) {
         {
           event: '*',
           schema: 'public',
-          table: 'subscriptions',
-          filter: `user_id = ${user?.id}`
+          table: 'subscriptions'
+          // filter: `user_id = ${user?.id}`
         },
         () => {
           router.refresh();

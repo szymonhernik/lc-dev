@@ -41,7 +41,7 @@ export default function CheckoutForm() {
       setIsSubmitting(false);
       if (result.session) {
         // router.refresh();
-        router.push(`/?ts=${Date.now()}`);
+        // router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true);
       } else {
         setMessageBody(result.error.message || 'An error occurred');
